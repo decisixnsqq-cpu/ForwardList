@@ -1,14 +1,10 @@
-﻿#include "List.h"
+#include "List.h"
 
-#include <iostream>
-
-using namespace std;
-
-List::List() :  m_head(nullptr),   m_size(0U)
+List::List() : m_head(nullptr), m_size(0U)
 {
 }
 
-List::List(const List& list) :  m_head(nullptr), m_size(0U)
+List::List(const List& list) : m_head(nullptr), m_size(0U)
 {
     Assign(list);
 }
@@ -33,14 +29,12 @@ unsigned int List::GetSize() const
     return m_size;
 }
 
-void List::Add(const char data)////data - данні котрі хочемо додати до списку  в кінець
+void List::Add(const Person& data)
 {
-    // Cоздание нового элемента.
     Node* newNode = new Node(data);
 
-    if (m_head == nullptr)//////якщо список пустий
+    if (m_head == nullptr)
     {
-        // Новый элемент становится головным элементом списка.
         m_head = newNode;
     }
     else
@@ -52,11 +46,64 @@ void List::Add(const char data)////data - данні котрі хочемо д�
             temp = temp->m_next;
         }
 
-        // Новый элемент становится в конец списка.
         temp->m_next = newNode;
     }
 
     ++m_size;
+}
+
+void List::Insert(const Person& data, int index)
+{
+    if (index < 0 || index > m_size)
+        return;
+
+    Node* newNode = new Node(data);
+
+    if (index == 0)
+    {
+        newNode->m_next = m_head;
+        m_head = newNode;
+    }
+    else
+    {
+        Node* temp = m_head;
+
+        for (int i = 0; i < index - 1; i++)
+        {
+            temp = temp->m_next;
+        }
+
+        newNode->m_next = temp->m_next;
+        temp->m_next = newNode;
+    }
+
+    ++m_size;
+}
+
+void List::RemoveAt(int index)
+{
+    if (index < 0 || index >= m_size)
+        return;
+
+    if (index == 0)
+    {
+        RemoveHead();
+        return;
+    }
+
+    Node* temp = m_head;
+
+    for (int i = 0; i < index - 1; i++)
+    {
+        temp = temp->m_next;
+    }
+
+    Node* nodeToDelete = temp->m_next;
+    temp->m_next = nodeToDelete->m_next;
+
+    delete nodeToDelete;
+
+    --m_size;
 }
 
 void List::Assign(const List& list)
@@ -68,56 +115,41 @@ void List::Assign(const List& list)
     while (node != nullptr)
     {
         Add(node->m_data);
-
         node = node->m_next;
     }
 }
 
 void List::Print() const
 {
-    // Запоминание адреса головного элемента.
     Node* temp = m_head;
 
-    // Пока еще есть элементы.
     while (temp != nullptr)
     {
-        // Вывод данных.
-        cout << temp->m_data;
+        cout << temp->m_data.name << " "
+             << temp->m_data.age << endl;
 
-        // Переход на следующий элемент.
         temp = temp->m_next;
     }
 
     cout << endl;
 }
 
-//////////////  RemoveAt (int index)  DZ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-///////  Insert(Node* node, index)
-
-
-void List::RemoveHead()//1й
+void List::RemoveHead()
 {
     if (m_head != nullptr)
     {
-        // Запоминание адреса головного элемента.
         Node* node = m_head;
-
-        // Перебрасывание головы на следующий элемент.
         m_head = m_head->m_next;
 
-        // Удаление бывшего головного элемента.
         delete node;
-
         --m_size;
     }
 }
 
 void List::RemoveAll()
 {
-    // Пока еще есть элементы.
     while (m_head != nullptr)
     {
-        // Удаление элементов по одному.
         RemoveHead();
     }
 }
