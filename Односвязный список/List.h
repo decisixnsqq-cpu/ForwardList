@@ -1,44 +1,53 @@
-﻿#pragma once
+#pragma once
+#include <iostream>
+#include <string>
 
-#include "Node.h"
+using namespace std;
+
+struct Person
+{
+    string name;
+    int age;
+};
 
 class List
 {
 private:
 
-    // Адрес головного элемента списка.
-    Node * m_head=nullptr;
+    struct Node
+    {
+        Person m_data;
+        Node* m_next;
 
-    // Количество элементов списка.
-    unsigned int m_size=0;
+        Node(const Person& data)
+        {
+            m_data = data;
+            m_next = nullptr;
+        }
+    };
+
+    Node* m_head;
+    unsigned int m_size;
 
 public:
 
     List();
     List(const List& list);
-
     ~List();
 
     List& operator=(const List& right);
 
-    // Добавление элемента в список (новый элемент становится в конец списка).
-    void Add(const char data);
-    void Add(Node* new_node);
+    unsigned int GetSize() const;
 
+    void Add(const Person& data);
+    void Insert(const Person& data, int index);
+    void RemoveAt(int index);
 
-
-
-    void Assign(const List& list);
-
-    // Распечатка содержимого списка (распечатка начинается с головного элемента).
     void Print() const;
 
-    // Удаление элемента списка (удаляется головной элемент).
-    void RemoveHead();
+private:
 
-    // Удаление всех элементов списка.
+    void Assign(const List& list);
+    void RemoveHead();
     void RemoveAll();
-	
-    // Получение количества элементов, находящихся в списке.
-    unsigned int GetSize() const;
 };
